@@ -8,10 +8,12 @@ public class Item {
 		
 	}
 	
-	Item(String name, float price, int amount){
-		this.name = name;
-		this.price = price;
-		this.amount = amount;
+	public static Item ItemFactory(String name, float price, int amount){
+		Item i = new Item();
+		i.name = name;
+		i.price = price;
+		i.amount = amount;
+		return i;
 	}
 	
 	public float getTotalPrice() {
