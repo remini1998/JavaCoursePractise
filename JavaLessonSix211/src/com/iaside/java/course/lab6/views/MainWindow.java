@@ -420,7 +420,7 @@ public class MainWindow {
         // TODO: place custom component creation code here
 
         tradesTable = tableBuilder(new String[]{
-                "id", "会员名", "商品", "单价", "数量", "总价"
+                "id", "商品", "会员名", "单价", "数量", "总价"
         }, new Class[]{
                 Long.class, Object.class, Object.class, Float.class, Float.class, Float.class
         });
