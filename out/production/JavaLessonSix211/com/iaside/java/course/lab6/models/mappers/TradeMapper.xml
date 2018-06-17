@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iaside.java.course.lab6.models.mappers.TradeMapper">
+
+    <resultMap type="Trade" id="TradeList"></resultMap>
+
+    <sql id="SelectFromTable">
+      SELECT
+        trade.id AS id,
+        item.id AS buyerId,
+        item.name AS buyerName,
+        custom.id AS itemBoughtId,
+        custom.name AS itemBoughtName,
+        item.price AS price,
+        trade.amount AS amount
+      FROM trade
+      JOIN item ON item.id = trade.item_id
+      JOIN custom ON custom.id = trade.buyer_id
+    </sql>
+
+    <select id="search" resultMap="TradeList">
+        <include refid="SelectFromTable"></include>
+        WHERE item.name LIKE CONCAT('%', #{name}, '%') OR custom.name LIKE CONCAT('%', #{name}, '%')
+    </select>
+
+    <select id="select" resultType="Trade">
+        <include refid="SelectFromTable"></include>
+        WHERE trade.id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="TradeList">
+        <include refid="SelectFromTable"></include>
+    </select>
+
+    <insert id="insert" parameterType="Trade">
+        insert into trade (buyer_id, item_id, amount)
+          values (#{buyerId}, #{itemBoughtId}, #{amount})
+    </insert>
+
+    <update id="update" parameterType="Trade">
+        update trade set
+          buyer_id = #{buyerId},
+          item_id = #{itemBoughtId},
+          amount = #{amount}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from trade where id = #{id}
+    </delete>
+</mapper>

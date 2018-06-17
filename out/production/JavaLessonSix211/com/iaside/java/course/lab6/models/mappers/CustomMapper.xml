@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iaside.java.course.lab6.models.mappers.CustomMapper">
+
+    <resultMap type="Custom" id="CustomList"></resultMap>
+
+    <sql id="SelectFromTable">
+      SELECT
+        record.id AS id,
+        record.name AS name,
+        CASE WHEN SUM(record.itemTotal) IS NULL THEN 0 ELSE SUM(record.itemTotal) END AS totalSpent
+      FROM (
+        SELECT
+		  custom.id AS id,
+		  custom.name AS name,
+          (trade.amount * item.price) AS itemTotal
+        FROM custom
+        LEFT JOIN trade ON custom.id = trade.buyer_id
+        LEFT JOIN item ON item.id = trade.item_id) AS record
+    </sql>
+
+    <select id="search" resultMap="CustomList">
+        <include refid="SelectFromTable"></include>
+        WHERE record.name LIKE CONCAT('%', #{name}, '%')
+        GROUP BY record.id
+    </select>
+
+    <select id="select" resultType="Custom">
+        <include refid="SelectFromTable"></include>
+        WHERE record.id = #{id}
+        GROUP BY record.id
+    </select>
+
+    <select id="selectAll" resultMap="CustomList">
+        <include refid="SelectFromTable"></include>
+        GROUP BY record.id
+    </select>
+
+    <insert id="insert" parameterType="Custom">
+        insert into custom (name)
+          values (#{name})
+    </insert>
+
+    <update id="update" parameterType="Custom">
+        update custom set
+          name = #{name}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from custom where id = #{id}
+    </delete>
+</mapper>
