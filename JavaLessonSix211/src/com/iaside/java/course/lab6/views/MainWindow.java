@@ -389,7 +389,7 @@ public class MainWindow {
             v.add(t.getItemBoughtName());
             v.add(t.getPrice());
             v.add(t.getAmount());
-            v.add(t.getPrice());
+            v.add(t.getTotalPrice());
             tradesTableModel.addRow(v);
         });
     }
